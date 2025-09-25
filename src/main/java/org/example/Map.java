@@ -74,4 +74,12 @@ public class Map {
             default: return "неизвестный объект";
         }
     }
+
+    public int getLenght(){
+        return this.length;
+    }
+
+    public int getHeight(){
+        return this.height;
+    }
 }
