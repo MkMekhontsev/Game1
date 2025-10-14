@@ -2,13 +2,18 @@ package org.example;
 
 import java.util.Random;
 
-public class Unit {
+public abstract class Unit {
     private int x, y, hp = 100, score = 0;
+    protected Map map;
 
-    public Unit(int x, int y) {
+    public Unit(int x, int y, Map map) {
         this.x = x;
         this.y = y;
+        this.map = map;
     }
+
+    // Абстрактный метод — реализуется в наследниках
+    public abstract void attack();
 
     public void damage() {
         int damage = new Random().nextInt(30);
@@ -62,19 +67,8 @@ public class Unit {
         System.out.println("Текущая позиция: [" + x + "," + y + "], HP: " + hp + ", Очки: " + score);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public int getScore() {
-        return score;
-    }
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public int getHp() { return hp; }
+    public int getScore() { return score; }
 }
