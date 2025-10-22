@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Map map = new Map();
-        Hero hero = new Hero(0, 0);
+        Hero hero = new Hero(0, 0, map);
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Добро пожаловать в игру!");

@@ -35,14 +35,14 @@ config=StructureConfiguration;
     "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
     "removeByClassName": "",
     "cutMappings": false,
-    "cutEnum": true,
+    "cutEnum": false,
     "cutTests": true,
     "cutClient": true,
     "cutDataAccess": false,
     "cutInterfaceStructures": false,
     "cutDataStructures": false,
-    "cutGetterAndSetter": true,
-    "cutConstructors": true
+    "cutGetterAndSetter": false,
+    "cutConstructors": false
   },
   "graphTraversal": {
     "forwardDepth": 3,
@@ -93,6 +93,7 @@ subgraph cluster_1322970774 {
 	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
 <TR><TD ALIGN="LEFT" >(C)Enemy</TD></TR>
 <HR/>
+<TR><TD ALIGN="LEFT" >+ Enemy(x: int, y: int, map: Map)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ attack()</TD></TR>
 <TR><TD ALIGN="LEFT" >+ move(newX: int, newY: int, map: Map)</TD></TR>
 </TABLE>>
@@ -106,6 +107,7 @@ Hero1526836320[
 	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
 <TR><TD ALIGN="LEFT" >(C)Hero</TD></TR>
 <HR/>
+<TR><TD ALIGN="LEFT" >+ Hero(x: int, y: int, map: Map)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ attack()</TD></TR>
 </TABLE>>
 	style=filled
@@ -134,6 +136,9 @@ Map1526836320[
 <TR><TD ALIGN="LEFT" >-   length: int [1]</TD></TR>
 <TR><TD ALIGN="LEFT" >-   positions: int[][] [0..*]</TD></TR>
 <HR/>
+<TR><TD ALIGN="LEFT" >+ Map()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getHeight(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getLenght(): int</TD></TR>
 <TR><TD ALIGN="LEFT" >+ getObject(x: int, y: int): int</TD></TR>
 <TR><TD ALIGN="LEFT" >- getObjectName(objectType: int): String</TD></TR>
 <TR><TD ALIGN="LEFT" >- getSymbol(objectType: int): char</TD></TR>
@@ -156,8 +161,13 @@ Unit1526836320[
 <TR><TD ALIGN="LEFT" >-   x: int [1]</TD></TR>
 <TR><TD ALIGN="LEFT" >-   y: int [1]</TD></TR>
 <HR/>
+<TR><TD ALIGN="LEFT" >+ Unit(x: int, y: int, map: Map)</TD></TR>
 <TR><TD ALIGN="LEFT" >+ attack()</TD></TR>
 <TR><TD ALIGN="LEFT" >+ damage()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getHp(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getScore(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getX(): int</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getY(): int</TD></TR>
 <TR><TD ALIGN="LEFT" >+ move(newX: int, newY: int, map: Map)</TD></TR>
 </TABLE>>
 	style=filled
@@ -168,7 +178,7 @@ Unit1526836320[
 } 
 
 'edges    
-Main1526836320 -> Map1526836320[label="main() -> showObjects()"];
+Main1526836320 -> Hero1526836320[label="main() -> Hero()"];
 Unit1526836320 -> Enemy1526836320[arrowhead=none, arrowtail=empty, dir=both];
 Unit1526836320 -> Hero1526836320[arrowhead=none, arrowtail=empty, dir=both];
 Unit1526836320 -> Map1526836320[label="map

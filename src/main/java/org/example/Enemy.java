@@ -1,8 +1,8 @@
 package org.example;
 
 public class Enemy extends Unit {
-    public Enemy(int x, int y) {
-        super(x, y);
+    public Enemy(int x, int y, Map map) {
+        super(x, y, map);
     }
 
     @Override
