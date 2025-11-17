@@ -7,28 +7,31 @@ public class Main {
         Map map = new Map();
         Hero hero = new Hero(0, 0, map);
         Scanner scanner = new Scanner(System.in);
+        int x, y;
 
         System.out.println("Добро пожаловать в игру!");
-        System.out.println("Управление: w - вверх, s - вниз, a - влево, d - вправо, q - выход");
+        System.out.println("Команды: a - атака, q - выход");
 
         while (true) {
             System.out.println("\n===================================");
             map.showObjects(hero.getX(), hero.getY());
             System.out.println("Ваш HP: " + hero.getHp() + " | Очки: " + hero.getScore());
-            System.out.print("Введите команду: ");
-            String command = scanner.nextLine();
 
-            int x = hero.getX();
-            int y = hero.getY();
 
-            switch (command.toLowerCase()) {
-                case "w": hero.move(x - 1, y, map); break;
-                case "s": hero.move(x + 1, y, map); break;
-                case "a": hero.move(x, y - 1, map); break;
-                case "d": hero.move(x, y + 1, map); break;
-                case "q": System.out.println("Выход из игры. До свидания!"); return;
-                default: System.out.println("Неизвестная команда!");
+            System.out.println("Введите координаты точки в которую хотите переместиться: ");
+            x = scanner.nextInt();
+            y = scanner.nextInt();
+            if (x < 0 || x >= map.getLenght() || y < 0 || y >= map.getHeight()) {
+                while(true){
+                    System.out.println("Вы ввели неправильные координаты, введите их еще раз: ");
+                    x = scanner.nextInt();
+                    y = scanner.nextInt();
+                    if(!(x<0 || x>=map.getHeight() || y<0 || y>=map.getLenght())){
+                        break;
+                    }
+                }
             }
+            hero.move(x, y);
 
             if (hero.getHp() <= 0) {
                 System.out.println("Вы проиграли! Финальный счёт: " + hero.getScore());

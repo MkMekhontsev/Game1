@@ -27,22 +27,31 @@ public class Map {
     }
 
     public void showObjects(int playerX, int playerY) {
-        System.out.println("КАРТА МИРА С СИМВОЛАМИ");
+        System.out.println("КАРТА МИРА С КООРДИНАТАМИ");
         System.out.println("Легенда: .-трава, ^-горы, $-сокровищница, *-артефакт, ~-вода, #-стена замка, @-игрок");
         System.out.println();
 
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < height; j++) {
-                if (i == playerX && j == playerY) {
-                    System.out.print("@ ");
+        System.out.print("    ");
+        for (int x = 0; x < length; x++) {
+            System.out.printf("%2d ", x);
+        }
+        System.out.println();
+
+        for (int y = 0; y < height; y++) {
+            // --- вывод координаты Y ---
+            System.out.printf("%2d | ", y);
+
+            for (int x = 0; x < length; x++) {
+                if (x == playerX && y == playerY) {
+                    System.out.print("@  ");
                 } else {
-                    char symbol = getSymbol(positions[i][j]);
-                    System.out.print(symbol + " ");
+                    System.out.print(getSymbol(positions[x][y]) + "  ");
                 }
             }
             System.out.println();
         }
     }
+
 
     private char getSymbol(int objectType) {
         switch (objectType) {

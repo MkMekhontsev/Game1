@@ -6,12 +6,12 @@ public class Enemy extends Unit {
     }
 
     @Override
-    public void move(int newX, int newY, Map map) {
-        super.move(newX, newY, map);
+    public void attack() {
+        System.out.println("Враг нападает из засады!");
     }
 
     @Override
-    public void attack() {
-        System.out.println("Враг нападает из засады!");
+    public void move(int x, int y){
+
     }
 }
