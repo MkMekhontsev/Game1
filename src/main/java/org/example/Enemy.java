@@ -12,6 +12,6 @@ public class Enemy extends Unit {
 
     @Override
     public void move(int x, int y){
-
+        // пока враг не двигается
     }
 }

@@ -1,10 +1,13 @@
 package org.example;
 
-import java.util.Random;
-
 public abstract class Unit {
-    private int x, y, hp = 100, score = 0;
+    protected int x;
+    protected int y;
     protected Map map;
+
+    protected int hp = 100;
+    protected int score = 0;
+    protected int strength = 10; // добавлено для атаки
 
     public Unit(int x, int y, Map map) {
         this.x = x;
@@ -13,19 +16,11 @@ public abstract class Unit {
     }
 
     public abstract void attack();
+    public abstract void move(int targetX, int targetY);
 
-    public abstract void move(int x, int y);
-
-    public void damage() {
-        int damage = new Random().nextInt(30);
-        hp -= damage;
-        System.out.println("Получен урон: " + damage + " HP осталось: " + hp);
-
-        if (hp <= 0) {
-            System.out.println("Поражение :(");
-        } else if (hp < 50) {
-            System.out.println("Осталось меньше половины здоровья");
-        }
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public int getX() { return x; }
@@ -33,8 +28,6 @@ public abstract class Unit {
     public int getHp() { return hp; }
     public int getScore() { return score; }
 
-    protected void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
+    public void addHp(int amount) { hp += amount; }
+    public void addScore(int amount) { score += amount; }
 }

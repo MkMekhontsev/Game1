@@ -17,20 +17,16 @@ public class Main {
             map.showObjects(hero.getX(), hero.getY());
             System.out.println("Ваш HP: " + hero.getHp() + " | Очки: " + hero.getScore());
 
-
             System.out.println("Введите координаты точки в которую хотите переместиться: ");
             x = scanner.nextInt();
             y = scanner.nextInt();
-            if (x < 0 || x >= map.getLenght() || y < 0 || y >= map.getHeight()) {
-                while(true){
-                    System.out.println("Вы ввели неправильные координаты, введите их еще раз: ");
-                    x = scanner.nextInt();
-                    y = scanner.nextInt();
-                    if(!(x<0 || x>=map.getHeight() || y<0 || y>=map.getLenght())){
-                        break;
-                    }
-                }
+
+            while (!isValidCoordinate(x, y, map)) {
+                System.out.println("Вы ввели неправильные координаты, введите их еще раз: ");
+                x = scanner.nextInt();
+                y = scanner.nextInt();
             }
+
             hero.move(x, y);
 
             if (hero.getHp() <= 0) {
@@ -38,5 +34,9 @@ public class Main {
                 break;
             }
         }
+    }
+
+    private static boolean isValidCoordinate(int x, int y, Map map) {
+        return x >= 0 && x < map.getLength() && y >= 0 && y < map.getHeight();
     }
 }

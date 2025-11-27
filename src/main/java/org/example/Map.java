@@ -38,9 +38,7 @@ public class Map {
         System.out.println();
 
         for (int y = 0; y < height; y++) {
-            // --- вывод координаты Y ---
             System.out.printf("%2d | ", y);
-
             for (int x = 0; x < length; x++) {
                 if (x == playerX && y == playerY) {
                     System.out.print("@  ");
@@ -51,7 +49,6 @@ public class Map {
             System.out.println();
         }
     }
-
 
     private char getSymbol(int objectType) {
         switch (objectType) {
@@ -72,35 +69,11 @@ public class Map {
         return positions[x][y];
     }
 
-    public void showCellInfo(int x, int y) {
-        int obj = getObject(x, y);
-        System.out.println("Позиция [" + x + "," + y + "]: " + obj + " - " + getObjectName(obj));
-    }
-
-    private String getObjectName(int objectType) {
-        switch (objectType) {
-            case -1: return "за пределами карты";
-            case 0: return "трава";
-            case 1: return "горы";
-            case 2: return "сокровищница";
-            case 3: return "артефакт";
-            case 4: return "вода";
-            case 5: return "стена замка";
-            default: return "неизвестный объект";
-        }
-    }
-
-    public int getLenght() {
-        return length;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
     public boolean isWalkable(int x, int y) {
         int obj = getObject(x, y);
         return obj == 0 || obj == 2 || obj == 3;
     }
 
+    public int getLength() { return length; }
+    public int getHeight() { return height; }
 }

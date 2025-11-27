@@ -10,7 +10,7 @@ public class Hero extends Unit {
 
     @Override
     public void attack() {
-        System.out.println("Герой наносит удар мечом!");
+        System.out.println("Герой наносит удар мечом! (Сила: " + strength + ")");
     }
 
     @Override
@@ -30,26 +30,20 @@ public class Hero extends Unit {
     }
 
     private List<int[]> bfs(int startX, int startY, int endX, int endY) {
-
+        int w = map.getLength();
         int h = map.getHeight();
-        int w = map.getLenght();
 
-        boolean[][] visited = new boolean[h][w];
-        int[][][] parent = new int[h][w][2];
+        boolean[][] visited = new boolean[w][h];
+        int[][][] parent = new int[w][h][2];
 
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{startX, startY});
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{startX, startY});
         visited[startX][startY] = true;
 
-        int[][] dirs = {
-                {1, 0},
-                {-1, 0},
-                {0, 1},
-                {0, -1}
-        };
+        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
 
-        while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
             int x = cur[0], y = cur[1];
 
             if (x == endX && y == endY)
@@ -59,7 +53,7 @@ public class Hero extends Unit {
                 int nx = x + d[0];
                 int ny = y + d[1];
 
-                if (nx < 0 || ny < 0 || nx >= h || ny >= w)
+                if (nx < 0 || ny < 0 || nx >= w || ny >= h)
                     continue;
 
                 if (!map.isWalkable(nx, ny))
@@ -69,7 +63,7 @@ public class Hero extends Unit {
                     visited[nx][ny] = true;
                     parent[nx][ny][0] = x;
                     parent[nx][ny][1] = y;
-                    queue.add(new int[]{nx, ny});
+                    q.add(new int[]{nx, ny});
                 }
             }
         }
