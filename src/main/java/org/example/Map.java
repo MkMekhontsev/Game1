@@ -97,4 +97,10 @@ public class Map {
     public int getHeight() {
         return height;
     }
+
+    public boolean isWalkable(int x, int y) {
+        int obj = getObject(x, y);
+        return obj == 0 || obj == 2 || obj == 3;
+    }
+
 }

@@ -1,7 +1,9 @@
 package org.example;
+
 import java.util.*;
 
 public class Hero extends Unit {
+
     public Hero(int x, int y, Map map) {
         super(x, y, map);
     }
@@ -13,7 +15,8 @@ public class Hero extends Unit {
 
     @Override
     public void move(int targetX, int targetY) {
-        List<int[]> path = dijkstra(getX(), getY(), targetX, targetY);
+        List<int[]> path = bfs(getX(), getY(), targetX, targetY);
+
         if (path == null) {
             System.out.println("Путь не найден!");
             return;
@@ -26,44 +29,53 @@ public class Hero extends Unit {
         }
     }
 
-    private List<int[]> dijkstra(int startX, int startY, int endX, int endY) {
+    private List<int[]> bfs(int startX, int startY, int endX, int endY) {
+
         int h = map.getHeight();
         int w = map.getLenght();
 
-        int[][] dist = new int[h][w];
+        boolean[][] visited = new boolean[h][w];
         int[][][] parent = new int[h][w][2];
-        for (int[] row : dist) Arrays.fill(row, Integer.MAX_VALUE);
 
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
-        pq.add(new int[]{0, startX, startY});
-        dist[startX][startY] = 0;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{startX, startY});
+        visited[startX][startY] = true;
 
-        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+        int[][] dirs = {
+                {1, 0},
+                {-1, 0},
+                {0, 1},
+                {0, -1}
+        };
 
-        while (!pq.isEmpty()) {
-            int[] cur = pq.poll();
-            int d = cur[0], x = cur[1], y = cur[2];
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int x = cur[0], y = cur[1];
 
-            if (x == endX && y == endY) break;
+            if (x == endX && y == endY)
+                break;
 
-            for (int[] k : dirs) {
-                int nx = x + k[0];
-                int ny = y + k[1];
+            for (int[] d : dirs) {
+                int nx = x + d[0];
+                int ny = y + d[1];
 
-                if (nx < 0 || ny < 0 || nx >= h || ny >= w) continue;
+                if (nx < 0 || ny < 0 || nx >= h || ny >= w)
+                    continue;
 
-                int cost = 1; // можно сделать зависимость от типа клетки
+                if (!map.isWalkable(nx, ny))
+                    continue;
 
-                if (dist[x][y] + cost < dist[nx][ny]) {
-                    dist[nx][ny] = dist[x][y] + cost;
+                if (!visited[nx][ny]) {
+                    visited[nx][ny] = true;
                     parent[nx][ny][0] = x;
                     parent[nx][ny][1] = y;
-                    pq.add(new int[]{dist[nx][ny], nx, ny});
+                    queue.add(new int[]{nx, ny});
                 }
             }
         }
 
-        if (dist[endX][endY] == Integer.MAX_VALUE) return null;
+        if (!visited[endX][endY])
+            return null;
 
         List<int[]> path = new ArrayList<>();
         int cx = endX, cy = endY;
@@ -75,6 +87,7 @@ public class Hero extends Unit {
             cx = px;
             cy = py;
         }
+
         Collections.reverse(path);
         return path;
     }
