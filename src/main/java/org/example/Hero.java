@@ -3,6 +3,9 @@ package org.example;
 import java.util.*;
 
 public class Hero extends Unit {
+    private int level = 1;
+    private int experience = 0;
+    private int experienceToNextLevel = 100;
 
     public Hero(int x, int y, Map map) {
         super(x, y, map);
@@ -10,7 +13,7 @@ public class Hero extends Unit {
 
     @Override
     public void attack() {
-        System.out.println("Герой наносит удар мечом! (Сила: " + strength + ")");
+        System.out.println("Герой наносит удар мечом! (Сила: " + strength + ", Уровень: " + level + ")");
     }
 
     @Override
@@ -26,8 +29,67 @@ public class Hero extends Unit {
         for (int[] p : path) {
             pathMessage.append(" -> (").append(p[0]).append(",").append(p[1]).append(")");
             setPosition(p[0], p[1]);
+
+            int objectType = map.getObject(p[0], p[1]);
+            handleCellObject(objectType, p[0], p[1]);
         }
         System.out.println(pathMessage.toString());
+    }
+
+    private void handleCellObject(int objectType, int x, int y) {
+        switch (objectType) {
+            case 2:
+                int treasureScore = 20 + (level * 5);
+                addScore(treasureScore);
+                experience += 15;
+                map.removeObject(x, y);
+                System.out.println("Найдено сокровище! +" + treasureScore + " очков, +15 опыта");
+                checkLevelUp();
+                break;
+
+            case 3:
+                int artifactScore = 50 + (level * 10);
+                addScore(artifactScore);
+                experience += 30;
+                map.removeObject(x, y);
+                System.out.println("Найден артефакт! +" + artifactScore + " очков, +30 опыта");
+                checkLevelUp();
+                break;
+
+            case 1:
+                System.out.println("Преодолены горы! +5 опыта");
+                experience += 5;
+                checkLevelUp();
+                break;
+        }
+    }
+
+    private void checkLevelUp() {
+        while (experience >= experienceToNextLevel) {
+            level++;
+            experience -= experienceToNextLevel;
+            experienceToNextLevel = (int)(experienceToNextLevel * 1.5);
+
+            int oldHp = hp;
+            hp += 20;
+            strength += 5;
+
+            System.out.println("Уровень повышен! Новый уровень: " + level);
+            System.out.println("Здоровье: " + oldHp + " -> " + hp);
+            System.out.println("Сила: " + (strength - 5) + " -> " + strength);
+        }
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public int getExperienceToNextLevel() {
+        return experienceToNextLevel;
     }
 
     private List<int[]> bfs(int startX, int startY, int endX, int endY) {

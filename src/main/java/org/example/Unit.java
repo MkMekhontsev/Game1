@@ -7,7 +7,7 @@ public abstract class Unit {
 
     protected int hp = 100;
     protected int score = 0;
-    protected int strength = 10; // добавлено для атаки
+    protected int strength = 10;
 
     public Unit(int x, int y, Map map) {
         this.x = x;
@@ -27,7 +27,9 @@ public abstract class Unit {
     public int getY() { return y; }
     public int getHp() { return hp; }
     public int getScore() { return score; }
+    public int getStrength() { return strength; }
 
     public void addHp(int amount) { hp += amount; }
     public void addScore(int amount) { score += amount; }
+    public void setStrength(int strength) { this.strength = strength; }
 }

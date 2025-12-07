@@ -3,7 +3,6 @@ package org.example;
 import java.util.Random;
 
 public class Map {
-    // Увеличиваем размер карты
     private int length = 16;
     private int height = 12;
     private int[][] positions = new int[length][height];
@@ -73,6 +72,12 @@ public class Map {
     public boolean isWalkable(int x, int y) {
         int obj = getObject(x, y);
         return obj == 0 || obj == 2 || obj == 3;
+    }
+
+    public void removeObject(int x, int y) {
+        if (x >= 0 && x < length && y >= 0 && y < height) {
+            positions[x][y] = 0;
+        }
     }
 
     public int getLength() { return length; }
