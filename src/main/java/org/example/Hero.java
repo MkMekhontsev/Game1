@@ -22,11 +22,12 @@ public class Hero extends Unit {
             return;
         }
 
-        System.out.println("Двигаюсь по маршруту:");
+        StringBuilder pathMessage = new StringBuilder("Двигаюсь по маршруту:");
         for (int[] p : path) {
-            System.out.println("-> (" + p[0] + "," + p[1] + ")");
+            pathMessage.append(" -> (").append(p[0]).append(",").append(p[1]).append(")");
             setPosition(p[0], p[1]);
         }
+        System.out.println(pathMessage.toString());
     }
 
     private List<int[]> bfs(int startX, int startY, int endX, int endY) {
