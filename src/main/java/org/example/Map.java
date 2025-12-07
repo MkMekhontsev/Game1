@@ -3,8 +3,9 @@ package org.example;
 import java.util.Random;
 
 public class Map {
-    private int length = 10;
-    private int height = 10;
+    // Увеличиваем размер карты
+    private int length = 16;
+    private int height = 12;
     private int[][] positions = new int[length][height];
 
     /*
