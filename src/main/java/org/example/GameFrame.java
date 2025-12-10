@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class GameFrame extends JFrame {
     private final Hero hero;
@@ -17,12 +18,16 @@ public class GameFrame extends JFrame {
     private final JTextField yField;
     private final JButton moveButton;
     private final JTextArea messageArea;
+    private final JButton attackButton;
+    private final JButton enemyTurnButton;
+    private final JButton showMapButton;
 
     public GameFrame(Hero hero, Map map) {
         this.hero = hero;
         this.map = map;
+        map.setHero(hero);
 
-        setTitle("Приключенческая игра");
+        setTitle("Приключенческая игра - Генерация карты");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -62,20 +67,41 @@ public class GameFrame extends JFrame {
         moveButton.addActionListener(new MoveActionListener());
         controlPanel.add(moveButton);
 
-        JButton attackButton = new JButton("Атака");
+        attackButton = new JButton("Атаковать вокруг");
         attackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                hero.attack();
+                attackNearbyEnemies();
                 updateStats();
-                appendMessage("Герой атакует! Уровень: " + hero.getLevel() + ", Сила: " + (hero.getLevel() * 10 + 10));
+                gamePanel.repaint();
             }
         });
         controlPanel.add(attackButton);
 
+        enemyTurnButton = new JButton("Ход врагов");
+        enemyTurnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                enemyTurn();
+                updateStats();
+                gamePanel.repaint();
+            }
+        });
+        controlPanel.add(enemyTurnButton);
+
+        showMapButton = new JButton("Показать карту");
+        showMapButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                map.showObjects(hero.getX(), hero.getY());
+                appendMessage("Карта отображена в консоли");
+            }
+        });
+        controlPanel.add(showMapButton);
+
         mainPanel.add(controlPanel);
 
-        messageArea = new JTextArea(5, 40);
+        messageArea = new JTextArea(5, 50);
         messageArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(messageArea);
         mainPanel.add(scrollPane);
@@ -83,6 +109,11 @@ public class GameFrame extends JFrame {
         add(mainPanel);
         pack();
         setLocationRelativeTo(null);
+
+        appendMessage("Добро пожаловать в игру с улучшенной генерацией карты!");
+        appendMessage("Размер карты: 24x18 клеток");
+        appendMessage("Новые объекты: деревья (T) и лава (L)");
+        appendMessage("Лава наносит урон при попадании на нее!");
     }
 
     private class MoveActionListener implements ActionListener {
@@ -98,6 +129,9 @@ public class GameFrame extends JFrame {
                     int oldLevel = hero.getLevel();
 
                     hero.move(targetX, targetY);
+
+                    enemyTurn();
+
                     updateStats();
                     gamePanel.repaint();
 
@@ -109,6 +143,9 @@ public class GameFrame extends JFrame {
                     if (hero.getHp() <= 0) {
                         appendMessage("Вы проиграли! Финальный счёт: " + hero.getScore() + "\n");
                         moveButton.setEnabled(false);
+                        attackButton.setEnabled(false);
+                        enemyTurnButton.setEnabled(false);
+                        showMapButton.setEnabled(false);
                     }
                 } else {
                     messageArea.append("Неверные координаты. Диапазон: 0-" + (map.getLength() - 1) + ", 0-" + (map.getHeight() - 1) + "\n");
@@ -118,6 +155,48 @@ public class GameFrame extends JFrame {
             }
             xField.setText("");
             yField.setText("");
+        }
+    }
+
+    private void attackNearbyEnemies() {
+        List<Enemy> enemies = map.getEnemies();
+        int enemiesHit = 0;
+
+        for (Enemy enemy : enemies) {
+            int dx = Math.abs(hero.getX() - enemy.getX());
+            int dy = Math.abs(hero.getY() - enemy.getY());
+
+            if (dx <= 1 && dy <= 1 && (dx + dy) > 0 && enemy.isActive()) {
+                hero.attack();
+                enemy.takeDamage(hero.getStrength());
+                enemiesHit++;
+
+                if (!enemy.isActive()) {
+                    appendMessage("Враг повержен! +10 очков, +20 опыта");
+                }
+            }
+        }
+
+        if (enemiesHit == 0) {
+            appendMessage("Нет врагов рядом для атаки");
+        } else {
+            appendMessage("Атаковано врагов: " + enemiesHit);
+        }
+
+        map.updateEnemies();
+    }
+
+    private void enemyTurn() {
+        appendMessage("--- Ход врагов ---");
+        map.updateEnemies();
+        appendMessage("Враги сделали ход");
+
+        if (hero.getHp() <= 0) {
+            appendMessage("Вы проиграли! Финальный счёт: " + hero.getScore() + "\n");
+            moveButton.setEnabled(false);
+            attackButton.setEnabled(false);
+            enemyTurnButton.setEnabled(false);
+            showMapButton.setEnabled(false);
         }
     }
 

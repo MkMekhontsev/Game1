@@ -32,6 +32,10 @@ public class Hero extends Unit {
 
             int objectType = map.getObject(p[0], p[1]);
             handleCellObject(objectType, p[0], p[1]);
+
+            checkEnemyCollision(p[0], p[1]);
+
+            checkDangerousCell(p[0], p[1]);
         }
         System.out.println(pathMessage.toString());
     }
@@ -61,6 +65,43 @@ public class Hero extends Unit {
                 experience += 5;
                 checkLevelUp();
                 break;
+
+            case 6:
+                System.out.println("Пробираетесь через лес...");
+                break;
+        }
+    }
+
+    private void checkDangerousCell(int x, int y) {
+        if (map.isDangerous(x, y)) {
+            int lavaDamage = 10 + level * 2;
+            addHp(-lavaDamage);
+            System.out.println("Ой! Лава наносит " + lavaDamage + " урона! HP: " + hp);
+
+            if (hp <= 0) {
+                System.out.println("Герой сгорел в лаве!");
+            }
+        }
+    }
+
+    private void checkEnemyCollision(int x, int y) {
+        for (Enemy enemy : map.getEnemies()) {
+            if (enemy.getX() == x && enemy.getY() == y && enemy.isActive()) {
+                System.out.println("Столкновение с врагом!");
+                enemy.attack();
+
+                int damage = enemy.getStrength();
+                addHp(-damage);
+                System.out.println("Враг нанес " + damage + " урона! HP: " + hp);
+
+                attack();
+                enemy.takeDamage(strength);
+
+                if (hp <= 0) {
+                    System.out.println("Герой повержен!");
+                }
+                break;
+            }
         }
     }
 
@@ -78,6 +119,11 @@ public class Hero extends Unit {
             System.out.println("Здоровье: " + oldHp + " -> " + hp);
             System.out.println("Сила: " + (strength - 5) + " -> " + strength);
         }
+    }
+
+    public void addExperience(int amount) {
+        experience += amount;
+        checkLevelUp();
     }
 
     public int getLevel() {

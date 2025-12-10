@@ -29,7 +29,12 @@ public abstract class Unit {
     public int getScore() { return score; }
     public int getStrength() { return strength; }
 
-    public void addHp(int amount) { hp += amount; }
+    public void addHp(int amount) {
+        hp += amount;
+        if (hp > 200) hp = 200;
+    }
+
     public void addScore(int amount) { score += amount; }
     public void setStrength(int strength) { this.strength = strength; }
+    public void takeDamage(int damage) { hp -= damage; }
 }
